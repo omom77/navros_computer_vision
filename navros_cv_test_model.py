@@ -7,7 +7,17 @@ print("Current Working Directory:", os.getcwd())
 
 
 # Load the YOLOv8 model with custom weights
-model = YOLOv8('/home/om/Documents/navros_computer_vision/weights/best.pt')  # Replace with the path to your trained weights
+model = YOLO('/home/om/Documents/navros_computer_vision/weights/best.pt')  # Replace with the path to your trained weights
+
+cap = cv2.VideoCapture(0)
+cap.set(3, 640)
+cap.set(4, 480)
+while True:
+    ret, img= cap.read()
+    cv2.imshow('Webcam', img)
+
+    if cv2.waitKey(1) == ord('q'):
+        break
 
 # Load an image to test the model
 image = cv2.imread('/home/om/Documents/navros_computer_vision/navros_test_images/cone_test_1.jpg')  # Replace with the path to your image
