@@ -1,0 +1,15 @@
+# Ignore virtual environments
+.venv/
+myenv/
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore weights and large files
+# weights/
+yolo-Weights/
+results_test/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
