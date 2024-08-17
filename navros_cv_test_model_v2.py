@@ -1,10 +1,14 @@
 from ultralytics import YOLO
 import cv2
 import math 
+
+width = 640 
+height = 480
+
 # start webcam
 cap = cv2.VideoCapture(0)
-cap.set(3, 640)
-cap.set(4, 480)
+cap.set(3, width)
+cap.set(4, height)
 
 # model
 model = YOLO("weights/best.pt")
@@ -16,6 +20,16 @@ classNames = ["cone"]
 while True:
     success, img = cap.read()
     results = model(img, stream=True)
+
+    # // for integer division
+    # 1st Quadrant
+    cv2.rectangle(img, (0, 0), (width//2, height//2), (0, 255, 0), 2) 
+    # 2nd Quadrant
+    cv2.rectangle(img, (width//2, 0), (width , height//2), (255, 255, 0), 2) 
+    # 3rd Quadrant
+    cv2.rectangle(img, (0, height//2), (width//2, height), (0, 0, 255), 2)
+    # 4th Quadrant 
+    cv2.rectangle(img, (width//2, height//2), (width, height), (255, 0, 0), 2) 
 
     # coordinates
     for r in results:
