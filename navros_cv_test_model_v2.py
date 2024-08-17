@@ -23,13 +23,21 @@ while True:
 
     # // for integer division
     # 1st Quadrant
-    cv2.rectangle(img, (0, 0), (width//2, height//2), (0, 255, 0), 2) 
+    quadrants = {
+    "q1": [(0, 0), (width//2, height//2)],
+    "q2": [(width//2, 0), (width, height//2)],
+    "q3": [(0, height//2), (width//2, height)],
+    "q4": [(width//2, height//2), (width, height)]
+    }
+
+    cv2.rectangle(img, quadrants[key][0], quadrants[key][1], (0, 255, 0), 2) 
     # 2nd Quadrant
     cv2.rectangle(img, (width//2, 0), (width , height//2), (255, 255, 0), 2) 
     # 3rd Quadrant
     cv2.rectangle(img, (0, height//2), (width//2, height), (0, 0, 255), 2)
     # 4th Quadrant 
     cv2.rectangle(img, (width//2, height//2), (width, height), (255, 0, 0), 2) 
+    quadrants = {q1: (0,0)}
 
     # coordinates
     for r in results:
@@ -42,6 +50,8 @@ while True:
 
             # put box in cam
             cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+
+            bb_center = [(x1+x2)/2, (y1+y2)/2]
 
             # confidence
             confidence = math.ceil((box.conf[0]*100))/100
