@@ -22,22 +22,38 @@ while True:
     results = model(img, stream=True)
 
     # // for integer division
-    # 1st Quadrant
+    # { "quadrant_n: [(x1, y1), (x2, y2), "text coordinates"]"}
     quadrants = {
-    "q1": [(0, 0), (width//2, height//2)],
-    "q2": [(width//2, 0), (width, height//2)],
-    "q3": [(0, height//2), (width//2, height)],
-    "q4": [(width//2, height//2), (width, height)]
+    "q1": [(width//2, 0), 
+           (width, height//2), 
+           (0, 255, 0), 
+           ((width//2), 30)],
+    "q2": [(0, 0), 
+           (width//2, height//2), 
+           (255, 255, 0), 
+           (0, 30)],
+    "q3": [(0, height//2), 
+           (width//2, height), 
+           (0, 0, 255), 
+           (0, (height//2)+30)],
+    "q4": [(width//2, height//2), 
+           (width, height), 
+           (255,0,0), 
+           (width//2, (height//2)+30)]
     }
 
-    cv2.rectangle(img, quadrants[key][0], quadrants[key][1], (0, 255, 0), 2) 
-    # 2nd Quadrant
-    cv2.rectangle(img, (width//2, 0), (width , height//2), (255, 255, 0), 2) 
-    # 3rd Quadrant
-    cv2.rectangle(img, (0, height//2), (width//2, height), (0, 0, 255), 2)
-    # 4th Quadrant 
-    cv2.rectangle(img, (width//2, height//2), (width, height), (255, 0, 0), 2) 
-    quadrants = {q1: (0,0)}
+    quadrants_list = list(quadrants.keys())
+
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    fontScale = 1
+    color = (255, 0, 0)
+    thickness = 2
+
+    # Create the 4 Quadrants
+    for i, (key, coords) in enumerate(quadrants.items()):
+        cv2.rectangle(img, coords[0], coords[1], coords[2])
+        # print quadrant number - i+1
+        cv2.putText(img, str(i+1), coords[3], font, fontScale, color, thickness)
 
     # coordinates
     for r in results:
@@ -47,6 +63,9 @@ while True:
             # bounding box
             x1, y1, x2, y2 = box.xyxy[0]
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2) # convert to int values
+
+            x_mid = (x1 + x2)/2
+            y_mid = (y1 + y2)/2
 
             # put box in cam
             cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
