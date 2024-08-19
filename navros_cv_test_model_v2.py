@@ -33,13 +33,17 @@ while True:
            (255, 255, 0), 
            (0, 30)],
     "q3": [(0, height//2), 
-           (width//2, height), 
+           (width//2, height-100), 
            (0, 0, 255), 
            (0, (height//2)+30)],
     "q4": [(width//2, height//2), 
-           (width, height), 
+           (width, height-100), 
            (255,0,0), 
-           (width//2, (height//2)+30)]
+           (width//2, (height//2)+30)],
+    "q5": [(0, height-100), 
+           (width, height), 
+           (0,255, 255),
+           (0, height-20)]
     }
 
     quadrants_list = list(quadrants.keys())
@@ -51,9 +55,22 @@ while True:
 
     # Create the 4 Quadrants
     for i, (key, coords) in enumerate(quadrants.items()):
-        cv2.rectangle(img, coords[0], coords[1], coords[2])
+        cv2.rectangle(
+            img, 
+            coords[0], 
+            coords[1], 
+            coords[2]
+            )
         # print quadrant number - i+1
-        cv2.putText(img, str(i+1), coords[3], font, fontScale, color, thickness)
+        cv2.putText(
+            img, 
+            str(i+1), 
+            coords[3], 
+            font, 
+            fontScale, 
+            color, 
+            thickness
+            )
 
     # coordinates
     for r in results:
@@ -68,9 +85,26 @@ while True:
             y_mid = (y1 + y2)/2
 
             # put box in cam
-            cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+            cv2.rectangle(
+                img, 
+                (x1, y1), 
+                (x2, y2), 
+                (255, 0, 255), 
+                3
+                )
 
-            bb_center = [(x1+x2)/2, (y1+y2)/2]
+            # Define midpoint of detected object
+            bb_center = [
+                (x1+x2)/2, 
+                (y1+y2)/2
+                ]
+
+            for i, (key, coords) in enumerate(quadrants.items()):
+                x1_y1_top = coords[0]
+                x2_y2_bottom = coords[1]
+
+                if (x1_y1_top[0] <= bb_center[0] < x2_y2_bottom[0]) and (x1_y1_top[1] <= bb_center[1] < x2_y2_bottom[1]):
+                    print("Cone in Quadrant:", i + 1)
 
             # confidence
             confidence = math.ceil((box.conf[0]*100))/100
@@ -87,7 +121,15 @@ while True:
             color = (255, 0, 0)
             thickness = 2
 
-            cv2.putText(img, classNames[cls], org, font, fontScale, color, thickness)
+            cv2.putText(
+                img, 
+                classNames[cls], 
+                org, 
+                font, 
+                fontScale, 
+                color, 
+                thickness
+                )
 
     cv2.imshow('Webcam', img)
     if cv2.waitKey(1) == ord('q'):
